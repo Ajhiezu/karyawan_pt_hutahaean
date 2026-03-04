@@ -19,7 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('karyawan', KaryawanController::class);
-    // Route::post('/import-karyawan', [ImportController::class, 'import']);
+    Route::post('/import-karyawan', [ImportController::class, 'import']);
 });
 
 require __DIR__.'/auth.php';

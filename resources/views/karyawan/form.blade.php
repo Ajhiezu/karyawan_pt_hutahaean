@@ -88,14 +88,16 @@
             <div class="mb-3">
                 <label class="form-label">Tanggal Lahir</label>
                 <input type="date" name="tanggal_lahir" class="form-control"
-                    value="{{ old('tanggal_lahir', isset($karyawan) ? $karyawan->tanggal_lahir->format('Y-m-d') : '') }}"
+                    value="{{ old('tanggal_lahir', isset($karyawan) && $karyawan->tanggal_lahir ? $karyawan->tanggal_lahir->format('Y-m-d') : '') }}"
                     required>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Tanggal Diterima</label>
                 <input type="date" name="tanggal_diterima" class="form-control"
-                    value="{{ old('tanggal_diterima', isset($karyawan) ? $karyawan->tanggal_diterima->format('Y-m-d') : '') }}"
+                    value="{{ old('tanggal_diterima', isset($karyawan) && $karyawan->tanggal_diterima 
+                    ? $karyawan->tanggal_diterima->format('Y-m-d') 
+                    : '') }}"
                     required>
             </div>
 

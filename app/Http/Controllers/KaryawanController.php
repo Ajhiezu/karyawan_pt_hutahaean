@@ -16,7 +16,7 @@ class KaryawanController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Karyawan::with(['user', 'gaji'])->latest();
+        $query = Karyawan::with(['user', 'gaji'])->orderBy('created_at', 'desc');
 
         if ($request->search) {
             $query->where('nik', 'like', '%' . $request->search . '%')

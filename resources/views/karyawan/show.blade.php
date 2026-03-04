@@ -12,53 +12,61 @@
 
             <div class="row mb-3">
                 <div class="col-md-4 fw-bold">Nama Lengkap</div>
-                <div class="col-md-8">{{ $karyawan->user->name }}</div>
+                <div class="col-md-8">{{ $karyawan->user->name ?? '-' }}</div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-4 fw-bold">NIK</div>
-                <div class="col-md-8">{{ $karyawan->nik }}</div>
+                <div class="col-md-8">{{ $karyawan->nik ?? '-' }}</div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-4 fw-bold">Jabatan</div>
-                <div class="col-md-8">{{ $karyawan->jabatan }}</div>
+                <div class="col-md-8">{{ $karyawan->jabatan ?? '-' }}</div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-4 fw-bold">Pendidikan</div>
-                <div class="col-md-8">{{ $karyawan->pendidikan }}</div>
+                <div class="col-md-8">{{ $karyawan->pendidikan ?? '-' }}</div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-4 fw-bold">Status Kerja</div>
-                <div class="col-md-8">{{ $karyawan->status_kerja }}</div>
+                <div class="col-md-8">{{ $karyawan->status_kerja ?? '-' }}</div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-4 fw-bold">Jenis Kelamin</div>
                 <div class="col-md-8">
-                    {{ $karyawan->jenis_kelamin }}
+                    {{ $karyawan->jenis_kelamin ?? '-' }}
                 </div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-4 fw-bold">Tanggal Lahir</div>
                 <div class="col-md-8">
-                    {{ \Carbon\Carbon::parse($karyawan->tanggal_lahir)->format('d-m-Y') }}
+                    {{ $karyawan->tanggal_lahir
+                    ? \Carbon\Carbon::parse($karyawan->tanggal_lahir)->format('d-m-Y') : '-' }}
                 </div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-4 fw-bold">Tanggal Diterima</div>
                 <div class="col-md-8">
-                    {{ \Carbon\Carbon::parse($karyawan->tanggal_diterima)->format('d-m-Y') }}
+                    {{ $karyawan->tanggal_diterima
+                    ? \Carbon\Carbon::parse($karyawan->tanggal_diterima)->format('d-m-Y')
+                    : '-' }}
                 </div>
             </div>
 
             <div class="row mb-3">
+                <div class="col-md-4 fw-bold">Kode Status</div>
+                <div class="col-md-8">{{ $karyawan->kode_status ?? '-' }}</div>
+            </div>
+
+            <div class="row mb-3">
                 <div class="col-md-4 fw-bold">Alamat</div>
-                <div class="col-md-8">{{ $karyawan->alamat }}</div>
+                <div class="col-md-8">{{ $karyawan->alamat ?? '-' }}</div>
             </div>
 
             <hr>

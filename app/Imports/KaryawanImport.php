@@ -46,6 +46,7 @@ class KaryawanImport implements ToModel, WithHeadingRow
                 'jenis_kelamin' => strtoupper($row['jenis_kelamin']),
                 'tanggal_lahir' => $this->parseTanggal($row['tanggal_lahir']),
                 'tanggal_diterima' => $this->parseTanggal($row['tanggal_diterima']),
+                'kode_status' => strtoupper($row['kode_status']),
                 'alamat' => $row['alamat'],
                 'disabilitas' => strtolower($row['disabilitas']) == 'ya',
                 'masih_bekerja' => strtolower($row['masih_bekerja']) == 'ya',
@@ -76,8 +77,8 @@ class KaryawanImport implements ToModel, WithHeadingRow
 
             // Jika numeric (Excel date serial)
             if (is_numeric($value)) {
-                return \Carbon\Carbon::instance(
-                    \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value)
+                return Carbon::instance(
+                    Date::excelToDateTimeObject($value)
                 )->format('Y-m-d');
             }
 
@@ -85,7 +86,7 @@ class KaryawanImport implements ToModel, WithHeadingRow
             $value = trim($value);
 
             // Coba auto parse semua format
-            return \Carbon\Carbon::parse($value)->format('Y-m-d');
+            return Carbon::parse($value)->format('Y-m-d');
 
         } catch (\Exception $e) {
             return null;
