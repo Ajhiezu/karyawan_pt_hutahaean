@@ -24,6 +24,7 @@ return new class extends Migration {
             $table->text('alamat');
             $table->boolean('disabilitas')->default(false);
             $table->boolean('masih_bekerja')->default(true);
+            $table->enum('gaji', ['gaji_pokok', 'tj_perumahan','tj_kemahalan'])->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -50,6 +50,7 @@ class KaryawanImport implements ToModel, WithHeadingRow
                 'alamat' => $row['alamat'],
                 'disabilitas' => strtolower($row['disabilitas']) == 'ya',
                 'masih_bekerja' => strtolower($row['masih_bekerja']) == 'ya',
+                'gaji' => $row['gaji'] ?? null
             ]
         );
 

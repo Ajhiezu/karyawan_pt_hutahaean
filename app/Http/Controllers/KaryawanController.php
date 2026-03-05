@@ -55,9 +55,7 @@ class KaryawanController extends Controller
             'tanggal_lahir' => 'required|date',
             'tanggal_diterima' => 'required|date',
             'alamat' => 'required|string',
-            'gaji_pokok' => 'required|numeric|min:0',
-            'tj_perumahan' => 'nullable|numeric|min:0',
-            'tj_kemahalan' => 'nullable|numeric|min:0',
+            'gaji' => 'nullable|in:gaji_pokok,tj_perumahan,tj_kemahalan',
         ]);
 
         DB::transaction(function () use ($request) {
@@ -69,7 +67,7 @@ class KaryawanController extends Controller
                 'role' => 'karyawan'
             ]);
 
-            $karyawan = Karyawan::create([
+            Karyawan::create([
                 'user_id' => $user->id,
                 'nik' => $request->nik,
                 'jabatan' => $request->jabatan,
@@ -82,19 +80,7 @@ class KaryawanController extends Controller
                 'alamat' => $request->alamat,
                 'disabilitas' => $request->disabilitas ?? false,
                 'masih_bekerja' => true,
-            ]);
-
-            $total =
-                $request->gaji_pokok +
-                ($request->tj_perumahan ?? 0) +
-                ($request->tj_kemahalan ?? 0);
-
-            Gaji::create([
-                'karyawan_id' => $karyawan->id,
-                'gaji_pokok' => $request->gaji_pokok,
-                'tj_perumahan' => $request->tj_perumahan ?? 0,
-                'tj_kemahalan' => $request->tj_kemahalan ?? 0,
-                'total_gaji' => $total,
+                'gaji' => $request->gaji
             ]);
         });
 
@@ -135,9 +121,7 @@ class KaryawanController extends Controller
             'tanggal_lahir' => 'required|date',
             'tanggal_diterima' => 'required|date',
             'alamat' => 'required|string',
-            'gaji_pokok' => 'required|numeric|min:0',
-            'tj_perumahan' => 'nullable|numeric|min:0',
-            'tj_kemahalan' => 'nullable|numeric|min:0',
+            'gaji' => 'nullable|in:gaji_pokok,tj_perumahan,tj_kemahalan',
         ]);
 
         DB::transaction(function () use ($request, $karyawan) {
@@ -159,22 +143,8 @@ class KaryawanController extends Controller
                 'alamat' => $request->alamat,
                 'disabilitas' => $request->disabilitas ?? false,
                 'masih_bekerja' => $request->masih_bekerja ?? true,
+                'gaji' => $request->gaji
             ]);
-
-            $total =
-                $request->gaji_pokok +
-                ($request->tj_perumahan ?? 0) +
-                ($request->tj_kemahalan ?? 0);
-
-            $karyawan->gaji()->updateOrCreate(
-                ['karyawan_id' => $karyawan->id],
-                [
-                    'gaji_pokok' => $request->gaji_pokok,
-                    'tj_perumahan' => $request->tj_perumahan ?? 0,
-                    'tj_kemahalan' => $request->tj_kemahalan ?? 0,
-                    'total_gaji' => $total,
-                ]
-            );
         });
 
         return redirect()->route('karyawan.index')->with('success', 'Data karyawan berhasil diperbarui');

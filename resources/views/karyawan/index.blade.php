@@ -23,6 +23,8 @@
             <a href="{{ route('karyawan.create') }}" class="btn btn-primary">
                 <i class="bx bx-plus"></i> Tambah Karyawan
             </a>
+
+           
         </div>
 
         <div class="table-responsive">
@@ -56,12 +58,12 @@
                                 <div class="d-flex justify-content-center gap-2">
 
                                     <!-- Detail -->
-                                    <a href="{{ route('karyawan.show', $karyawan->id) }}" class="btn btn-sm btn-info">
+                                    <a href="{{ route('karyawan.show', $karyawan->id) }}" class="btn btn-sm btn-secondary">
                                         <i class="bx bx-show"></i>
                                     </a>
 
                                     <!-- Edit -->
-                                    <a href="{{ route('karyawan.edit', $karyawan->id) }}" class="btn btn-sm btn-warning">
+                                    <a href="{{ route('karyawan.edit', $karyawan->id) }}" class="btn btn-sm btn-secondary">
                                         <i class="bx bx-edit"></i>
                                     </a>
 
@@ -73,7 +75,7 @@
                                     </form>
 
                                     <button type="button" onclick="deleteKaryawan({{ $karyawan->id }})"
-                                        class="btn btn-sm btn-danger">
+                                        class="btn btn-sm btn-secondary">
                                         <i class="bx bx-trash"></i>
                                     </button>
 

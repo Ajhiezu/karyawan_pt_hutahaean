@@ -35,7 +35,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('karyawan.index', absolute: false));
+        return redirect()->route('karyawan.index');
     }
 
     /**

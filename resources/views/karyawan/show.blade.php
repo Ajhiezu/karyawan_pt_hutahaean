@@ -71,33 +71,29 @@
 
             <hr>
 
+            <hr>
+
             <h6 class="fw-bold mb-3">Informasi Gaji</h6>
-
-            <div class="row mb-2">
-                <div class="col-md-4 fw-bold">Gaji Pokok</div>
+            
+            <div class="row mb-3">
+                <div class="col-md-4 fw-bold">Jenis Gaji</div>
                 <div class="col-md-8">
-                    Rp {{ number_format($karyawan->gaji->gaji_pokok ?? 0, 0, ',', '.') }}
-                </div>
-            </div>
-
-            <div class="row mb-2">
-                <div class="col-md-4 fw-bold">TJ. Perumahan</div>
-                <div class="col-md-8">
-                    Rp {{ number_format($karyawan->gaji->tj_perumahan ?? 0, 0, ',', '.') }}
-                </div>
-            </div>
-
-            <div class="row mb-2">
-                <div class="col-md-4 fw-bold">TJ. Kemahalan</div>
-                <div class="col-md-8">
-                    Rp {{ number_format($karyawan->gaji->tj_kemahalan ?? 0, 0, ',', '.') }}
-                </div>
-            </div>
-
-            <div class="row mb-2">
-                <div class="col-md-4 fw-bold text-primary">Total Gaji</div>
-                <div class="col-md-8 fw-bold text-primary">
-                    Rp {{ number_format($karyawan->gaji->total_gaji ?? 0, 0, ',', '.') }}
+                    @switch($karyawan->gaji)
+                        @case('gaji_pokok')
+                            Gaji Pokok
+                            @break
+            
+                        @case('tj_perumahan')
+                            Tunjangan Perumahan
+                            @break
+            
+                        @case('tj_kemahalan')
+                            Tunjangan Kemahalan
+                            @break
+            
+                        @default
+                            -
+                    @endswitch
                 </div>
             </div>
 

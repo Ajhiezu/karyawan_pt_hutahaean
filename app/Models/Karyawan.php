@@ -21,7 +21,8 @@ class Karyawan extends Model
         'kode_status',
         'alamat',
         'disabilitas',
-        'masih_bekerja'
+        'masih_bekerja',
+        'gaji'
     ];
 
     protected $casts = [

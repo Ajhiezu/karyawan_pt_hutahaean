@@ -137,21 +137,22 @@
             <h6 class="mb-3 text-primary">Data Gaji</h6>
 
             <div class="mb-3">
-                <label class="form-label">Gaji Pokok</label>
-                <input type="text" name="gaji_pokok" class="form-control rupiah"
-                    value="{{ old('gaji_pokok', isset($karyawan) ? (int) $karyawan->gaji->gaji_pokok : 0) }}" required autocomplete="off">
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Tunjangan Perumahan</label>
-                <input type="text" name="tj_perumahan" class="form-control rupiah"
-                    value="{{ old('tj_perumahan', isset($karyawan) ? (int) $karyawan->gaji->tj_perumahan : 0) }}" autocomplete="off">
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Tunjangan Kemahalan</label>
-                <input type="text" name="tj_kemahalan" class="form-control rupiah"
-                    value="{{ old('tj_kemahalan', isset($karyawan) ? (int) $karyawan->gaji->tj_kemahalan : 0) }}" autocomplete="off">
+                <label class="form-label">Gaji</label>
+                <select name="gaji" class="form-select">
+                    <option value="">-- Pilih --</option>
+                    <option value="gaji_pokok"
+                        {{ old('gaji', $karyawan->gaji ?? '') == 'gaji_pokok' ? 'selected' : '' }}>
+                        Gaji Pokok
+                    </option>
+                    <option value="tj_perumahan"
+                        {{ old('gaji', $karyawan->gaji ?? '') == 'tj_perumahan' ? 'selected' : '' }}>
+                        Tunjangan Perumahan
+                    </option>
+                    <option value="tj_kemahalan"
+                        {{ old('gaji', $karyawan->gaji ?? '') == 'tj_kemahalan' ? 'selected' : '' }}>
+                        Tunjangan Kemahalan
+                    </option>
+                </select>
             </div>
 
             <button class="btn btn-primary">
