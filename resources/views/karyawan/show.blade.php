@@ -139,7 +139,7 @@
             </div>
 
             <div class="row mb-2">
-                <div class="col-md-4 fw-bold">Cuti DijalanI</div>
+                <div class="col-md-4 fw-bold">Cuti Dijalani</div>
                 <div class="col-md-8">
                     {{ $karyawan->cuti->cuti_dijalani ?? 0 }} HK
                 </div>

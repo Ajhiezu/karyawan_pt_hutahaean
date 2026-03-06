@@ -6,14 +6,25 @@
         </a>
     </div>
 
-    <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+    <div class="navbar-nav-right d-flex align-items-center w-100" id="navbar-collapse">
         <!-- Search -->
-        <div class="navbar-nav align-items-center">
+        <div class="navbar-nav align-items-center flex-grow-1">
             <div class="nav-item d-flex align-items-center">
-                <span class="app-brand-logo demo">
-                    <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" width="40" class="app-brand-logo demo">
-                </span>
-                <div data-i18n="Analytics" class="m-3">PT. HUTAHAEAN PintuBosi, Laguboti, Sumatera Utara</div>
+
+                <!-- Logo -->
+                <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" width="55" class="me-3">
+
+                <!-- Nama dan alamat -->
+                <div>
+                    <div style="font-size:20px; font-weight:700;">
+                        PT HUTAHAEAN Pabrik Tapioka
+                    </div>
+
+                    <div style="font-size:14px; color:#6c757d;">
+                        Jl. Indorayon, PintoBosi, Laguboti, Sumatera Utara, Indonesia
+                    </div>
+                </div>
+
             </div>
         </div>
         <!-- /Search -->

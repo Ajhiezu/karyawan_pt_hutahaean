@@ -51,6 +51,7 @@ class KaryawanController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
 
             'nik' => 'required|unique:karyawans,nik',
             'jabatan' => 'required|string',
@@ -170,6 +171,7 @@ class KaryawanController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $karyawan->user_id,
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
 
             'nik' => 'required|unique:karyawans,nik,' . $karyawan->id,
             'jabatan' => 'required|string',
@@ -188,7 +190,16 @@ class KaryawanController extends Controller
 
             $gambar = $karyawan->gambar;
 
-            if ($request->hasFile('gambar')) {
+            if ($request->hapus_gambar) {
+
+                if ($karyawan->gambar && File::exists(public_path('uploads/karyawan/' . $karyawan->gambar))) {
+                    File::delete(public_path('uploads/karyawan/' . $karyawan->gambar));
+                }
+
+                $gambar = null;
+            }
+
+            elseif ($request->hasFile('gambar')) {
 
                 if ($karyawan->gambar && File::exists(public_path('uploads/karyawan/' . $karyawan->gambar))) {
                     File::delete(public_path('uploads/karyawan/' . $karyawan->gambar));
@@ -199,13 +210,15 @@ class KaryawanController extends Controller
                 $file->move(public_path('uploads/karyawan'), $gambar);
             }
 
+
+
             $karyawan->user->update([
                 'name' => $request->name,
                 'email' => $request->email,
             ]);
 
             $karyawan->update([
-                'gambar' => $gambar, 
+                'gambar' => $gambar,
                 'nik' => $request->nik,
                 'jabatan' => $request->jabatan,
                 'pendidikan' => $request->pendidikan,

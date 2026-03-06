@@ -27,9 +27,21 @@
 
                     <!-- Preview -->
                     <img id="previewImage"
-                        src="{{ isset($karyawan) && $karyawan->gambar ? asset('uploads/karyawan/' . $karyawan->gambar) : '' }}"
-                        alt="Preview Gambar" class="mt-2"
-                        style="max-width: 500px; {{ isset($karyawan) && $karyawan->gambar ? '' : 'display:none;' }}">
+                        src="{{ isset($karyawan) && $karyawan->gambar
+                            ? asset('uploads/karyawan/' . $karyawan->gambar)
+                            : 'https://ui-avatars.com/api/?name=' .
+                                urlencode($karyawan->user->name ?? 'User') .
+                                '&background=random&color=fff&size=200' }}"
+                        class="mt-2 rounded shadow" style="max-width:200px;">
+
+                    @if (isset($karyawan) && $karyawan->gambar)
+                        <div class="form-check mt-2">
+                            <input type="checkbox" name="hapus_gambar" value="1" class="form-check-input">
+                            <label class="form-check-label text-danger">
+                                Hapus Foto Profil
+                            </label>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="mb-3">
@@ -321,15 +333,20 @@
 @push('scripts')
 
     <script>
-        document.getElementById('gambarInput').addEventListener('change', function(event) {
-            let preview = document.getElementById('previewImage');
-            let file = event.target.files[0];
+        const inputGambar = document.getElementById('gambarInput');
 
-            if (file) {
-                preview.src = URL.createObjectURL(file);
-                preview.style.display = 'block';
-            }
-        });
+        if (inputGambar) {
+            inputGambar.addEventListener('change', function(event) {
+
+                let preview = document.getElementById('previewImage');
+                let file = event.target.files[0];
+
+                if (file) {
+                    preview.src = URL.createObjectURL(file);
+                }
+
+            });
+        }
     </script>
 
     @if ($errors->any())

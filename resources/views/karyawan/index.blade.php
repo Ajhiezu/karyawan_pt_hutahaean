@@ -24,12 +24,6 @@
                 <i class="bx bx-plus"></i> Tambah Karyawan
             </a>
 
-            <form action="/import-karyawan" method="POST" enctype="multipart/form-data">
-                @csrf
-                <input type="file" name="file" required>
-                <button type="submit">Import</button>
-            </form>
-
         </div>
 
         <div class="table-responsive">
