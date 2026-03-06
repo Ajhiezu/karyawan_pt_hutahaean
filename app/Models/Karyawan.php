@@ -11,6 +11,7 @@ class Karyawan extends Model
 
     protected $fillable = [
         'user_id',
+        'gambar',
         'nik',
         'jabatan',
         'pendidikan',
@@ -22,7 +23,6 @@ class Karyawan extends Model
         'alamat',
         'disabilitas',
         'masih_bekerja',
-        'gaji'
     ];
 
     protected $casts = [
@@ -40,5 +40,15 @@ class Karyawan extends Model
     public function gaji()
     {
         return $this->hasOne(Gaji::class);
+    }
+
+    public function cuti()
+    {
+        return $this->hasOne(Cuti::class);
+    }
+
+    public function punishment()
+    {
+        return $this->hasOne(Punishment::class);
     }
 }

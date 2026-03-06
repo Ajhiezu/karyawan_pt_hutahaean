@@ -13,10 +13,10 @@ return new class extends Migration {
         Schema::create('gajis', function (Blueprint $table) {
             $table->id();
             $table->foreignId('karyawan_id')->constrained()->onDelete('cascade');
-            $table->decimal('gaji_pokok', 15, 2)->default(0);
-            $table->decimal('tj_perumahan', 15, 2)->default(0);
-            $table->decimal('tj_kemahalan', 15, 2)->default(0);
-            $table->decimal('total_gaji', 15, 2)->default(0);
+            $table->decimal('gaji_pokok', 15, 2)->nullable()->default(0);
+            $table->decimal('tj_perumahan', 15, 2)->nullable()->default(0);
+            $table->decimal('tj_kemahalan', 15, 2)->nullable()->default(0);
+            $table->decimal('total_gaji', 15, 2)->nullable()->default(0);
             $table->timestamps();
         });
     }

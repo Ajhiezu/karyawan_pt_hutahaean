@@ -24,7 +24,12 @@
                 <i class="bx bx-plus"></i> Tambah Karyawan
             </a>
 
-           
+            <form action="/import-karyawan" method="POST" enctype="multipart/form-data">
+                @csrf
+                <input type="file" name="file" required>
+                <button type="submit">Import</button>
+            </form>
+
         </div>
 
         <div class="table-responsive">
@@ -46,8 +51,13 @@
                             <td>
                                 <div class="d-flex align-items-center">
                                     <div class="avatar avatar-sm me-2">
-                                        <img src="https://ui-avatars.com/api/?name={{ urlencode($karyawan->user->name) }}&background=random&color=fff"
-                                            class="rounded-circle" width="32" height="32">
+                                        @if ($karyawan->gambar)
+                                            <img src="{{ asset('uploads/karyawan/' . $karyawan->gambar) }}" class="rounded"
+                                                width="32" height="32">
+                                        @else
+                                            <img src="https://ui-avatars.com/api/?name={{ urlencode($karyawan->user->name) }}&background=random&color=fff"
+                                                class="rounded" width="32" height="32">
+                                        @endif
                                     </div>
                                 </div>
                             </td>

@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cuti;
 use App\Models\Gaji;
 use App\Models\Karyawan;
+use App\Models\Punishment;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 
 class KaryawanController extends Controller
@@ -19,10 +22,12 @@ class KaryawanController extends Controller
         $query = Karyawan::with(['user', 'gaji'])->orderBy('created_at', 'desc');
 
         if ($request->search) {
-            $query->where('nik', 'like', '%' . $request->search . '%')
-                ->orWhereHas('user', function ($q) use ($request) {
-                    $q->where('name', 'like', '%' . $request->search . '%');
-                });
+            $query->where(function ($q) use ($request) {
+                $q->where('nik', 'like', '%' . $request->search . '%')
+                    ->orWhereHas('user', function ($u) use ($request) {
+                        $u->where('name', 'like', '%' . $request->search . '%');
+                    });
+            });
         }
 
         $karyawans = $query->paginate(10)->withQueryString();
@@ -55,10 +60,20 @@ class KaryawanController extends Controller
             'tanggal_lahir' => 'required|date',
             'tanggal_diterima' => 'required|date',
             'alamat' => 'required|string',
-            'gaji' => 'nullable|in:gaji_pokok,tj_perumahan,tj_kemahalan',
+            'gaji_pokok' => 'required|numeric|min:0',
+            'tj_perumahan' => 'nullable|numeric|min:0',
+            'tj_kemahalan' => 'nullable|numeric|min:0',
         ]);
 
         DB::transaction(function () use ($request) {
+
+            $gambar = null;
+
+            if ($request->hasFile('gambar')) {
+                $file = $request->file('gambar');
+                $gambar = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('uploads/karyawan'), $gambar);
+            }
 
             $user = User::create([
                 'name' => $request->name,
@@ -67,8 +82,9 @@ class KaryawanController extends Controller
                 'role' => 'karyawan'
             ]);
 
-            Karyawan::create([
+            $karyawan = Karyawan::create([
                 'user_id' => $user->id,
+                'gambar' => $gambar,
                 'nik' => $request->nik,
                 'jabatan' => $request->jabatan,
                 'pendidikan' => $request->pendidikan,
@@ -80,8 +96,48 @@ class KaryawanController extends Controller
                 'alamat' => $request->alamat,
                 'disabilitas' => $request->disabilitas ?? false,
                 'masih_bekerja' => true,
-                'gaji' => $request->gaji
             ]);
+
+            $total =
+                $request->gaji_pokok +
+                ($request->tj_perumahan ?? 0) +
+                ($request->tj_kemahalan ?? 0);
+
+            Gaji::create([
+                'karyawan_id' => $karyawan->id,
+                'gaji_pokok' => $request->gaji_pokok,
+                'tj_perumahan' => $request->tj_perumahan ?? 0,
+                'tj_kemahalan' => $request->tj_kemahalan ?? 0,
+                'total_gaji' => $total,
+            ]);
+
+            Cuti::updateOrCreate(
+                ['karyawan_id' => $karyawan->id],
+                [
+                    'periode_cuti' => $request->periode_cuti,
+                    'hak_cuti' => $request->hak_cuti ?? 12,
+                    'cuti_dijalani' => $request->cuti_dijalani ?? 0,
+                    'cuti_diusulkan' => $request->cuti_diusulkan ?? 0,
+                    'sisa_cuti' => $request->sisa_cuti ?? 12
+                ]
+            );
+
+            Punishment::updateOrCreate(
+                ['karyawan_id' => $karyawan->id],
+                [
+                    'teguran_tgl' => $request->teguran_tgl,
+                    'teguran_no' => $request->teguran_no,
+
+                    'sp1_tgl' => $request->sp1_tgl,
+                    'sp1_no' => $request->sp1_no,
+
+                    'sp2_tgl' => $request->sp2_tgl,
+                    'sp2_no' => $request->sp2_no,
+
+                    'sp3_tgl' => $request->sp3_tgl,
+                    'sp3_no' => $request->sp3_no
+                ]
+            );
         });
 
         return redirect()->route('karyawan.index')->with('success', 'Data karyawan berhasil ditambahkan');
@@ -92,6 +148,8 @@ class KaryawanController extends Controller
      */
     public function show(Karyawan $karyawan)
     {
+        $karyawan->load(['user', 'gaji', 'cuti', 'punishment']);
+
         return view('karyawan.show', compact('karyawan'));
     }
 
@@ -121,10 +179,25 @@ class KaryawanController extends Controller
             'tanggal_lahir' => 'required|date',
             'tanggal_diterima' => 'required|date',
             'alamat' => 'required|string',
-            'gaji' => 'nullable|in:gaji_pokok,tj_perumahan,tj_kemahalan',
+            'gaji_pokok' => 'nullable|numeric|min:0',
+            'tj_perumahan' => 'nullable|numeric|min:0',
+            'tj_kemahalan' => 'nullable|numeric|min:0',
         ]);
 
         DB::transaction(function () use ($request, $karyawan) {
+
+            $gambar = $karyawan->gambar;
+
+            if ($request->hasFile('gambar')) {
+
+                if ($karyawan->gambar && File::exists(public_path('uploads/karyawan/' . $karyawan->gambar))) {
+                    File::delete(public_path('uploads/karyawan/' . $karyawan->gambar));
+                }
+
+                $file = $request->file('gambar');
+                $gambar = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('uploads/karyawan'), $gambar);
+            }
 
             $karyawan->user->update([
                 'name' => $request->name,
@@ -132,6 +205,7 @@ class KaryawanController extends Controller
             ]);
 
             $karyawan->update([
+                'gambar' => $gambar, 
                 'nik' => $request->nik,
                 'jabatan' => $request->jabatan,
                 'pendidikan' => $request->pendidikan,
@@ -143,8 +217,49 @@ class KaryawanController extends Controller
                 'alamat' => $request->alamat,
                 'disabilitas' => $request->disabilitas ?? false,
                 'masih_bekerja' => $request->masih_bekerja ?? true,
-                'gaji' => $request->gaji
             ]);
+            $total =
+                $request->gaji_pokok +
+                ($request->tj_perumahan ?? 0) +
+                ($request->tj_kemahalan ?? 0);
+
+            $karyawan->gaji()->updateOrCreate(
+                ['karyawan_id' => $karyawan->id],
+                [
+                    'gaji_pokok' => $request->gaji_pokok,
+                    'tj_perumahan' => $request->tj_perumahan ?? 0,
+                    'tj_kemahalan' => $request->tj_kemahalan ?? 0,
+                    'total_gaji' => $total,
+                ]
+            );
+
+            $karyawan->cuti()->updateOrCreate(
+                ['karyawan_id' => $karyawan->id],
+                [
+                    'periode_cuti' => $request->periode_cuti,
+                    'hak_cuti' => $request->hak_cuti ?? 12,
+                    'cuti_dijalani' => $request->cuti_dijalani ?? 0,
+                    'cuti_diusulkan' => $request->cuti_diusulkan ?? 0,
+                    'sisa_cuti' => $request->sisa_cuti ?? 12
+                ]
+            );
+
+            $karyawan->punishment()->updateOrCreate(
+                ['karyawan_id' => $karyawan->id],
+                [
+                    'teguran_tgl' => $request->teguran_tgl,
+                    'teguran_no' => $request->teguran_no,
+
+                    'sp1_tgl' => $request->sp1_tgl,
+                    'sp1_no' => $request->sp1_no,
+
+                    'sp2_tgl' => $request->sp2_tgl,
+                    'sp2_no' => $request->sp2_no,
+
+                    'sp3_tgl' => $request->sp3_tgl,
+                    'sp3_no' => $request->sp3_no
+                ]
+            );
         });
 
         return redirect()->route('karyawan.index')->with('success', 'Data karyawan berhasil diperbarui');
@@ -156,6 +271,9 @@ class KaryawanController extends Controller
     public function destroy(Karyawan $karyawan)
     {
         DB::transaction(function () use ($karyawan) {
+            if ($karyawan->gambar && File::exists(public_path('uploads/karyawan/' . $karyawan->gambar))) {
+                File::delete(public_path('uploads/karyawan/' . $karyawan->gambar));
+            }
             $karyawan->delete();
             $karyawan->user->delete();
         });

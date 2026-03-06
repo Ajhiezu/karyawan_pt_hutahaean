@@ -8,13 +8,14 @@
 
     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
         <!-- Search -->
-        <!-- <div class="navbar-nav align-items-center">
+        <div class="navbar-nav align-items-center">
             <div class="nav-item d-flex align-items-center">
-                <i class="bx bx-search fs-4 lh-0"></i>
-                <input type="text" class="form-control border-0 shadow-none" placeholder="Search..."
-                    aria-label="Search..." />
+                <span class="app-brand-logo demo">
+                    <img src="{{ asset('assets/img/logo.png') }}" alt="Logo" width="40" class="app-brand-logo demo">
+                </span>
+                <div data-i18n="Analytics" class="m-3">PT. HUTAHAEAN PintuBosi, Laguboti, Sumatera Utara</div>
             </div>
-        </div> -->
+        </div>
         <!-- /Search -->
 
         <ul class="navbar-nav flex-row align-items-center ms-auto">
@@ -23,7 +24,8 @@
             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <img src="{{ asset('assets/img/avatar-admin.jpg') }}" alt class="w-px-40 h-auto rounded-circle" />
+                        <img src="{{ asset('assets/img/avatar-admin.jpg') }}" alt
+                            class="w-px-40 h-auto rounded-circle" />
                     </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">

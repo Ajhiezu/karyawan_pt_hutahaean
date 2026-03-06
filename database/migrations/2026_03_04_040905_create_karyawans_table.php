@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('karyawans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->unique()->constrained()->cascadeOnDelete();
+            $table->string('gambar')->nullable();
             $table->string('nik')->unique();
             $table->string('jabatan');
             $table->string('pendidikan');
@@ -24,7 +25,6 @@ return new class extends Migration {
             $table->text('alamat');
             $table->boolean('disabilitas')->default(false);
             $table->boolean('masih_bekerja')->default(true);
-            $table->enum('gaji', ['gaji_pokok', 'tj_perumahan','tj_kemahalan'])->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
